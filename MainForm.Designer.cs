@@ -41,6 +41,7 @@ namespace JsonMerge
             this.lblCompareFilePath = new System.Windows.Forms.Label();
             this.btnCompareFiles = new System.Windows.Forms.Button();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.pnlOriginalFile.SuspendLayout();
             this.pnlCompareFile.SuspendLayout();
             this.SuspendLayout();
@@ -84,7 +85,7 @@ namespace JsonMerge
             this.pnlOriginalFile.Location = new System.Drawing.Point(0, 0);
             this.pnlOriginalFile.Name = "pnlOriginalFile";
             this.pnlOriginalFile.Padding = new System.Windows.Forms.Padding(5);
-            this.pnlOriginalFile.Size = new System.Drawing.Size(450, 529);
+            this.pnlOriginalFile.Size = new System.Drawing.Size(450, 111);
             this.pnlOriginalFile.TabIndex = 3;
             this.pnlOriginalFile.DragDrop += new System.Windows.Forms.DragEventHandler(this.pnl_DragDrop);
             this.pnlOriginalFile.DragEnter += new System.Windows.Forms.DragEventHandler(this.Panel_DragEnter);
@@ -99,7 +100,7 @@ namespace JsonMerge
             this.pnlCompareFile.Location = new System.Drawing.Point(494, 0);
             this.pnlCompareFile.Name = "pnlCompareFile";
             this.pnlCompareFile.Padding = new System.Windows.Forms.Padding(5);
-            this.pnlCompareFile.Size = new System.Drawing.Size(450, 529);
+            this.pnlCompareFile.Size = new System.Drawing.Size(450, 111);
             this.pnlCompareFile.TabIndex = 4;
             this.pnlCompareFile.DragDrop += new System.Windows.Forms.DragEventHandler(this.pnl_DragDrop);
             this.pnlCompareFile.DragEnter += new System.Windows.Forms.DragEventHandler(this.Panel_DragEnter);
@@ -144,16 +145,23 @@ namespace JsonMerge
             this.btnCompareFiles.TabIndex = 5;
             this.btnCompareFiles.Text = "⇄";
             this.btnCompareFiles.UseVisualStyleBackColor = true;
+            this.btnCompareFiles.Click += new System.EventHandler(this.btnCompareFiles_Click);
             // 
             // openFileDialog
             // 
             this.openFileDialog.FileName = "en.json5";
             // 
+            // saveFileDialog
+            // 
+            this.saveFileDialog.DefaultExt = "json5";
+            this.saveFileDialog.FileName = "merged";
+            this.saveFileDialog.Filter = "JSON5 Files|*.json5";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(944, 529);
+            this.ClientSize = new System.Drawing.Size(944, 111);
             this.Controls.Add(this.btnCompareFiles);
             this.Controls.Add(this.pnlCompareFile);
             this.Controls.Add(this.pnlOriginalFile);
@@ -182,5 +190,6 @@ namespace JsonMerge
         private System.Windows.Forms.Label lblCompareFilePath;
         private System.Windows.Forms.Button btnCompareFiles;
         private System.Windows.Forms.OpenFileDialog openFileDialog;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog;
     }
 }

@@ -2,23 +2,23 @@
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace JsonMerge
 {
     public partial class MainForm : Form
     {
-        private enum JsonFileType
-        {
-            Original,
-            Compare
-        }
-
         private readonly Color _errorColor = Color.Red;
         private readonly Color _textColor = SystemColors.WindowText;
 
         private string _compareFilePath;
         private string _originalFilePath;
+
+        public MainForm()
+        {
+            InitializeComponent();
+        }
 
         public string OriginalFilePath
         {
@@ -40,25 +40,17 @@ namespace JsonMerge
             }
         }
 
-        public MainForm()
-        {
-            InitializeComponent();
-        }
-
         private void RecalculateControlSizes()
         {
-            pnlOriginalFile.Width = (this.Width / 2) - 30;
-            pnlCompareFile.Width = (this.Width / 2) - 30;
+            pnlOriginalFile.Width = Width / 2 - 30;
+            pnlCompareFile.Width = Width / 2 - 30;
             txtOriginalFilePath.Width = btnOriginalFileBrowse.Location.X - 14;
             txtCompareFilePath.Width = btnCompareFileBrowse.Location.X - 14;
         }
 
         private static void SetDragEventEffect(DragEventArgs e)
         {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
-            {
-                e.Effect = DragDropEffects.Copy;
-            }
+            if (e.Data.GetDataPresent(DataFormats.FileDrop)) e.Effect = DragDropEffects.Copy;
         }
 
         private static string GetFilePathFromDragDrop(DragEventArgs e)
@@ -71,13 +63,9 @@ namespace JsonMerge
         private void HandlePathChange(string path, JsonFileType type)
         {
             if (type == JsonFileType.Original)
-            {
                 OriginalFilePath = path;
-            }
             else
-            {
                 CompareFilePath = path;
-            }
         }
 
         private bool IsBothPathsValid()
@@ -90,13 +78,10 @@ namespace JsonMerge
         private void pnl_DragDrop(object sender, DragEventArgs e)
         {
             if (!(sender is Panel senderPanel)) return;
-            TextBox senderBox = null;
             var filePath = GetFilePathFromDragDrop(e);
 
             HandlePathChange(filePath,
                 senderPanel.Equals(pnlOriginalFile) ? JsonFileType.Original : JsonFileType.Compare);
-
-            // TODO Load the files and compare etc.
         }
 
         private void TextBox_TextChanged(object sender, EventArgs e)
@@ -127,7 +112,6 @@ namespace JsonMerge
         private void MainForm_Load(object sender, EventArgs e)
         {
             RecalculateControlSizes();
-
         }
 
         private void Panel_DragEnter(object sender, DragEventArgs e)
@@ -149,6 +133,22 @@ namespace JsonMerge
 
             var filePath = openFileDialog.FileName;
             CompareFilePath = filePath;
+        }
+
+        private async void btnCompareFiles_Click(object sender, EventArgs e)
+        {
+            if (saveFileDialog.ShowDialog() != DialogResult.OK) return;
+
+            var savePath = saveFileDialog.FileName;
+            var engine = new JsonParseCompareEngine(txtOriginalFilePath.Text, txtCompareFilePath.Text);
+            await Task.Run(engine.Load);
+            await Task.Run(() => engine.GenerateMergedJson(savePath));
+        }
+
+        private enum JsonFileType
+        {
+            Original,
+            Compare
         }
     }
 }
